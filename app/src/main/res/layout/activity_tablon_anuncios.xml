@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/background_gradient">
+
+    <!-- Encabezado -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/btnVolverGestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⬅"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:padding="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="TABLÓN DE ANUNCIOS"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Lista de Anuncios (Usaremos un ListView simple por ahora) -->
+    <ListView
+        android:id="@+id/lvAnuncios"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#40FFFFFF"
+        android:dividerHeight="1dp" />
+
+    <!-- Botón para sugerir un anuncio (Opcional, según tu diseño) -->
+    <Button
+        android:id="@+id/btnCrearAnuncio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SUGERIR NUEVO ANUNCIO"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#1976D2"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold" />
+
+</LinearLayout>

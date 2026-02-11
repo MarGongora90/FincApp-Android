@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/background_gradient">
+
+    <!-- Título FincApp -->
+    <TextView
+        android:id="@+id/tvNombreComunidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FincApp"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="40dp" />
+
+    <!-- Contenedor Azul Oscuro (Lista de botones) -->
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#002D5A"
+        android:padding="1dp">
+
+        <Button
+            android:id="@+id/btnInicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inicio"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnDatos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Datos"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnRecibos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recibos"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnActas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Actas"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnAnuncios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tablón de Anuncios"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnVotaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Votaciones"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnContacto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contacto"
+            android:backgroundTint="#002D5A"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+    <!-- Espaciador -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Botón de Cerrar Sesión -->
+    <TextView
+        android:id="@+id/btnVolver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>
