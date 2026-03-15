@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "305734885477",
+    "project_id": "fincapp-d823b",
+    "storage_bucket": "fincapp-d823b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305734885477:android:2765de415ccf30cffca68c",
+        "android_client_info": {
+          "package_name": "com.margongora.fincapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARYdyEj2vFNU6TiPO204uCLAnAs0SiGkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,132 +3,175 @@ package com.margongora.fincapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 /**
- * MainActivity: Gestiona el acceso de usuarios a FincApp.
- * Implementa validaciones visuales (setError) y Guía Interactiva (SharedPreferences).
- */
+ * CLASE PRINCIPAL: MainActivity
+ * * Esta clase gestiona la entrada a la aplicación FincApp.
+ * Se encarga de la autenticación de usuarios mediante Firebase Auth
+ * * @author Mar Góngora
+  */
 public class MainActivity extends AppCompatActivity {
 
-    private EditText etUsuario, etPassword;
+    /** Campo de texto para el correo electrónico del usuario */
+    private EditText etEmail;
+    /** Campo de texto para la contraseña del usuario */
+    private EditText etPassword;
+    /** Botón para ejecutar el inicio de sesión */
     private Button btnLogin;
+    /** Instancia de Firebase Auth para gestionar la sesión */
+    private FirebaseAuth mAuth;
+    /** Instancia de Firestore para acceder a los datos de la comunidad */
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 1. Enlace de los componentes del diseño XML
-        etUsuario = findViewById(R.id.etUsuario);
+        // Inicialización de servicios de Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Vinculación de componentes de la UI
+        etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
-        // 2. REQUISITO: Mostrar guía interactiva solo la primera vez que se usa la app
-        comprobarGuiaInicial();
+        // bienvenida inicial
+        comprobarPrimerAcceso();
 
-        // 3. Configurar el evento de clic del botón de login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Primero validamos que los datos introducidos sean correctos
-                if (validarEntrada()) {
-                    ejecutarLogin();
-                }
+                intentarLogin();
             }
         });
     }
 
     /**
-     * REQUISITO DEL PROFESOR: Validar la correcta inserción de datos.
-     * Muestra un error visual directo en el campo (setError) si hay fallos.
+     * Valida los campos de entrada antes de la autenticación.
+     * Verifica que el email sea válido y la contraseña cumpla con la longitud.
      */
-    private boolean validarEntrada() {
-        String dni = etUsuario.getText().toString().trim();
-        String pass = etPassword.getText().toString().trim();
+    private void intentarLogin() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
 
-        // Validación de campo vacío con aviso visual directo
-        if (dni.isEmpty()) {
-            etUsuario.setError("El DNI es obligatorio");
-            etUsuario.requestFocus(); // El cursor salta aquí para que el usuario escriba
-            return false;
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Introduce un email válido");
+            return;
         }
 
-        // Validación de longitud (Requisito de seguridad)
-        if (dni.length() < 9) {
-            etUsuario.setError("Formato de DNI incorrecto (mínimo 9 caracteres)");
-            etUsuario.requestFocus();
-            return false;
+        if (password.isEmpty() || password.length() < 6) {
+            etPassword.setError("Se necesitan 6 caracteres");
+            return;
         }
 
-        // Validación de contraseña
-        if (pass.isEmpty()) {
-            etPassword.setError("La contraseña no puede estar vacía");
-            etPassword.requestFocus();
-            return false;
-        }
-
-        return true;
+        realizarAuthEnFirebase(email, password);
     }
 
     /**
-     * Consulta la base de datos local para verificar el usuario.
+     * Realiza la llamada a Firebase Auth.
+     * * @param email Correo electrónico del usuario.
+     * @param password Contraseña del usuario.
      */
-    private void ejecutarLogin() {
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this);
-        SQLiteDatabase db = admin.getReadableDatabase();
+    private void realizarAuthEnFirebase(String email, String password) {
+        btnLogin.setEnabled(false);
 
-        String user = etUsuario.getText().toString().trim();
-        String pass = etPassword.getText().toString().trim();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
 
-        // Consulta SQL para buscar al usuario
-        Cursor fila = db.rawQuery(
-                "select nombre from usuarios where dni=? and password=?",
-                new String[]{user, pass});
-
-        if (fila.moveToFirst()) {
-            // Usuario encontrado: pasamos al menú principal
-            String nombreCompleto = fila.getString(0);
-            Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
-            intent.putExtra("USUARIO_NOMBRE", nombreCompleto);
-            startActivity(intent);
-            finish();
-        } else {
-            // Si el usuario existe pero la clave no, avisamos con Toast
-            Toast.makeText(this, "Credenciales incorrectas", Toast.LENGTH_LONG).show();
-            etPassword.setText("");
-        }
-        fila.close();
-        db.close();
+                        obtenerNombreDeUsuarioYContinuar();
+                    } else {
+                        btnLogin.setEnabled(true);
+                        mostrarError("Acceso Erróneo", "Correo o contraseña incorrecta.");
+                    }
+                });
     }
 
     /**
-     * REQUISITO DEL PROFESOR: Guía interactiva (Solo primera ejecución).
+     * Consulta la colección 'usuarios' en Firestore para recuperar el nombre.
+     * Da una bienvenida personalizada en lugar del email.
      */
-    private void comprobarGuiaInicial() {
-        SharedPreferences sharedPref = getSharedPreferences("FincAppPrefs", Context.MODE_PRIVATE);
-        boolean esPrimeraVez = sharedPref.getBoolean("primera_vez", true);
+    private void obtenerNombreDeUsuarioYContinuar() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            db.collection("usuarios").document(user.getUid())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        String nombreReal = "";
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                nombreReal = document.getString("nombre");
+                            }
+                        }
 
-        if (esPrimeraVez) {
+                        // Si no hay nombre, coge parte del mail
+                        if (nombreReal == null || nombreReal.isEmpty()) {
+                            nombreReal = user.getEmail().split("@")[0];
+                        }
+
+                        Toast.makeText(MainActivity.this, "¡Bienvenido, " + nombreReal + "!", Toast.LENGTH_SHORT).show();
+                        irAlMenuPrincipal(nombreReal);
+                    });
+        }
+    }
+
+    /**
+     * Diálogo de alerta para errores del sistema.
+     */
+    private void mostrarError(String titulo, String mensaje) {
+        new AlertDialog.Builder(this)
+                .setTitle(titulo)
+                .setMessage(mensaje)
+                .setPositiveButton("Aceptar", null)
+                .show();
+    }
+
+    /**
+     * Transición a la actividad principal del menú.
+     * @param nombreUsuario El nombre recuperado para ser usado en el resto de pantallas.
+     */
+    private void irAlMenuPrincipal(String nombreUsuario) {
+        Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
+        intent.putExtra("USUARIO_NOMBRE", nombreUsuario);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * Implementa la guía de usuario utilizando SharedPreferences.
+     * Se muestra únicamente la primera vez que se ejecuta la aplicación tras la instalación.
+     */
+    private void comprobarPrimerAcceso() {
+        SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        boolean esPrimerInicio = sharedPref.getBoolean("isFirstRun", true);
+
+        if (esPrimerInicio) {
             new AlertDialog.Builder(this)
-                    .setTitle("Guía de Inicio")
-                    .setMessage("¡Bienvenido a FincApp!\n\nUse su DNI y clave para acceder. Esta guía solo se mostrará una vez.")
-                    .setPositiveButton("Empezar", null)
+                    .setTitle("Bienvenido a FincApp")
+                    .setMessage("Esta es una herramienta para la gestión de su comunidad.\n\nAcceda con sus credenciales proporcionadas por el administrador.")
+                    .setPositiveButton("Comenzar", (dialog, which) -> {
+                        sharedPref.edit().putBoolean("isFirstRun", false).apply();
+                    })
                     .setCancelable(false)
                     .show();
-
-            // Guardar estado para que no se repita
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("primera_vez", false);
-            editor.apply();
         }
     }
 }

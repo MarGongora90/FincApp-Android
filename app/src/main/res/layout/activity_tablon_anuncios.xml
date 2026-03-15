@@ -1,54 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    PANTALLA: Tablón de Anuncios
+    DESCRIPCIÓN: Lista de comunicados, avisos de la comunidad y noticias.
+
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/background_gradient">
+    android:background="#1A242F">
 
-    <!-- Encabezado -->
-    <RelativeLayout
+    <!-- CABECERA SUPERIOR -->
+    <View
+        android:id="@+id/headerBg"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#2D3748" />
+
+    <TextView
+        android:id="@+id/tvTituloTablon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="TABLÓN DE ANUNCIOS"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1" />
 
-        <TextView
-            android:id="@+id/btnVolverGestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⬅"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:padding="10dp" />
+    <!-- LISTA DE ANUNCIOS -->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="TABLÓN DE ANUNCIOS"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <!-- Lista de Anuncios (Usaremos un ListView simple por ahora) -->
     <ListView
         android:id="@+id/lvAnuncios"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="#40FFFFFF"
-        android:dividerHeight="1dp" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerBg"
+        android:layout_above="@id/btnVolverGestion"
+        android:layout_marginTop="-20dp"
+        android:paddingHorizontal="20dp"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="16dp"
+        android:scrollbarStyle="outsideOverlay" />
 
-    <!-- Botón para sugerir un anuncio (Opcional, según tu diseño) -->
-    <Button
-        android:id="@+id/btnCrearAnuncio"
+    <!-- BOTÓN DE CIERRE / VOLVER -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVolverGestion"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SUGERIR NUEVO ANUNCIO"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#1976D2"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold" />
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:text="VOLVER AL MENÚ"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:backgroundTint="#3182CE"
+        app:cornerRadius="12dp" />
 
-</LinearLayout>
+</RelativeLayout>

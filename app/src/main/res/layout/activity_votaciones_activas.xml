@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANTALLA: Detalle y Ejecución de Voto
+    DESCRIPCIÓN: Permite al usuario ver el estado de una votación y emitir su voto.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F7F9"
+    tools:context=".DetalleVotacionActivity">
+
+    <!-- CABECERA AZUL -->
+    <View
+        android:id="@+id/headerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="#2196F3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="FincApp"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Votación en Curso"
+        android:textColor="#E3F2FD"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
+
+    <!-- TARJETA PRINCIPAL: OPCIONES Y RESULTADOS -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardMain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvTituloVotacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Cargando votación..."
+                android:textColor="#2C3E50"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                android:background="#2196F3" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- GRUPO DE BOTONES PARA VOTAR -->
+                <RadioGroup
+                    android:id="@+id/rgOpciones"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2">
+
+                    <RadioButton
+                        android:id="@+id/rbFavor"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:text="A Favor"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbContra"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:text="En Contra"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbAbstencion"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:text="Abstención"
+                        android:textSize="16sp" />
+                </RadioGroup>
+
+                <!-- COLUMNA DE PORCENTAJES TOTALES -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TOTALES (%)"
+                        android:textColor="#7F8C8D"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvVotosFavor"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#E8F5E9"
+                        android:gravity="center"
+                        android:text="0.00"
+                        android:textColor="#2E7D32"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvVotosContra"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="14dp"
+                        android:background="#FFEBEE"
+                        android:gravity="center"
+                        android:text="0.00"
+                        android:textColor="#C62828"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvVotosAbstencion"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="14dp"
+                        android:background="#F5F5F5"
+                        android:gravity="center"
+                        android:text="0.00"
+                        android:textColor="#616161"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- CUOTA DE PARTICIPACIÓN -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardCuota"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardMain">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Tu cuota de participación"
+                android:textColor="#546E7A"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvCuotaValor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#E3F2FD"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="0.00%"
+                android:textColor="#1976D2"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- BOTÓN DE ACCIÓN PRINCIPAL -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVolverVotaciones"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="32dp"
+        android:text="FINALIZAR / VOLVER"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,115 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANTALLA: Dashboard Principal
+    DESCRIPCIÓN: Lista de comunidades del usuario y encabezado de perfil.
+
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@drawable/background_gradient">
+    android:background="#1A242F">
 
-    <!-- Saludo personalizado -->
-    <TextView
-        android:id="@+id/tvSaludo"
+    <!-- CABECERA: Saludo -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bienvenido/a"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:gravity="end"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="24dp">
 
-    <!-- Título de la Aplicación -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="FincApp"
-        android:textColor="#FFFFFF"
-        android:textSize="45sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="50dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentStart="true">
 
-    <!-- Tarjeta de Comunidad 1: Edificio La Paz -->
-    <LinearLayout
-        android:id="@+id/btnComunidad1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:background="@drawable/border_white_thin"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:focusable="true">
+            <TextView
+                android:id="@+id/tvSaludo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hola de nuevo,"
+                android:textColor="#A0AEC0"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bienvenido/a"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Comunidad de Propietarios Edificio La Paz"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:text="FincApp"
+            android:textColor="#3182CE"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:gravity="center" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CL. Amapola, n°2"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:gravity="center" />
-    </LinearLayout>
 
-    <!-- Tarjeta de Comunidad 2: Edificio María Eugenia -->
-    <LinearLayout
-        android:id="@+id/btnComunidad2"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:background="@drawable/border_white_thin"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:indeterminateTint="#3182CE"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Comunidad de Propietarios Edificio María Eugenia"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CL. Río Miño, n°54"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <!-- Botón Cerrar Sesión (Optimizado para toque) -->
     <TextView
-        android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cerrar Sesión"
+        android:text="Tus Comunidades"
         android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- LISTA DINÁMICA: Requiere un Adapter y un LayoutManager en el código -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvComunidades"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
+
+    <!-- BOTÓN CERRAR SESIÓN-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogout"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Cerrar Sesión"
+        android:textColor="#E53E3E"
         android:textSize="16sp"
-        android:layout_gravity="center"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true" />
+        app:rippleColor="#22E53E3E"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

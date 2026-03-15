@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANTALLA: Contacto
+    DESCRIPCIÓN: Permite al usuario ver datos de contacto y enviar mensajes directos.
+
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A242F"
+    android:padding="24dp">
+
+    <!-- LOGO Y TÍTULO DE MARCA -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/logo_fincapp"
+            app:tint="#3182CE" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="FincApp"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTituloContacto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="Ponte en contacto"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- TARJETA DE INFORMACIÓN -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTituloContacto"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="#2D3748"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📞  950 22 55 66"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📍  Calle Napoleón 25, Local 7"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- FORMULARIO DE MENSAJE -->
+    <LinearLayout
+        android:id="@+id/infoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cardInfo"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escribe tu mensaje:"
+            android:textColor="#A0AEC0"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+
+        <EditText
+            android:id="@+id/etMensajeContacto"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/edittext_dark_bg"
+            android:gravity="top"
+            android:hint="¿En qué podemos ayudarte?"
+            android:textColorHint="#718096"
+            android:inputType="textMultiLine"
+            android:padding="16dp"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEnviarContacto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infoLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:text="Enviar Mensaje"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:cornerRadius="8dp"
+        android:backgroundTint="#3182CE" />
+
+    <!-- NAVEGACIÓN DE RETORNO -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVolverContacto"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:text="VOLVER AL MENÚ"
+        android:textColor="#A0AEC0" />
+
+</RelativeLayout>

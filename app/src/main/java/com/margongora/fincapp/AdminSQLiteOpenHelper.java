@@ -1,92 +1,61 @@
 package com.margongora.fincapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Esta clase DEBE estar dentro del paquete com.margongora.fincapp
- * para que el sistema pueda encontrarla.
+ * Clase auxiliar para la gestión de la base de datos local SQLite de FincApp.
+ * Se utiliza para persistencia de datos básicos en el dispositivo.
+ * * @author Mar Góngora
  */
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
+    /** Nombre del archivo de la base de datos. */
     private static final String DATABASE_NAME = "fincapp.db";
-    private static final int DATABASE_VERSION = 1;
+
+    /** Versión de la base de datos. */
+    private static final int DATABASE_VERSION = 3;
 
     public AdminSQLiteOpenHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Define la estructura de las tablas locales para que coincidan con la lógica de Firebase.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tabla de usuarios
-        db.execSQL("create table usuarios(" +
-                "dni text primary key," +
-                "nombre text," +
-                "password text)");
 
-        // Usuario de prueba: DNI 12345678A y clave 1234
-        db.execSQL("insert into usuarios values('12345678A', 'Usuario de Prueba', '1234')");
+        // Tabla de Usuarios: Datos del perfil local
+        db.execSQL("create table usuarios(" +
+                "dni text primary key, " +
+                "nombre text, " +
+                "password text, " +
+                "email text, " +
+                "cuota real)");
+
+        // Tabla de Comunidades: Almacena las comunidades a las que pertenece el usuario
+        db.execSQL("create table comunidades(" +
+                "id_comunidad text primary key, " +
+                "nombre_comunidad text, " +
+                "direccion text)");
+
+        // Tabla de Votaciones: Registro local de temas (Copia de seguridad local)
+        db.execSQL("create table votaciones(" +
+                "id_votacion text primary key, " +
+                "id_comunidad text, " +
+                "tema text, " +
+                "estado text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    }
-
-    /**
-     * Esta clase controla la pantalla donde el usuario elige su comunidad.
-     * Es el paso intermedio entre el Login y la Gestión de la Comunidad.
-     */
-    public static class MenuPrincipalActivity extends AppCompatActivity {
-
-        private TextView tvSaludo;
-        private LinearLayout btnComunidad1, btnComunidad2;
-        private TextView btnLogout;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_menu_principal);
-
-            // Enlazamos los componentes del XML
-            tvSaludo = findViewById(R.id.tvSaludo);
-            btnComunidad1 = findViewById(R.id.btnComunidad1);
-            btnComunidad2 = findViewById(R.id.btnComunidad2);
-            btnLogout = findViewById(R.id.btnLogout);
-
-            // Recibimos el nombre del usuario desde el Login (MainActivity)
-            String nombreUsuario = getIntent().getStringExtra("USUARIO_NOMBRE");
-            if (nombreUsuario != null) {
-                tvSaludo.setText("Bienvenido/a " + nombreUsuario);
-            }
-
-            // --- CONFIGURACIÓN DE CLICS ---
-
-            // Al pulsar en la primera comunidad (Edificio La Paz)
-            btnComunidad1.setOnClickListener(v -> {
-                Intent intent = new Intent(MenuPrincipalActivity.this, GestionComunidadActivity.class);
-                intent.putExtra("COMUNIDAD_NOMBRE", "Edificio La Paz");
-                startActivity(intent);
-            });
-
-            // Al pulsar en la segunda comunidad
-            btnComunidad2.setOnClickListener(v -> {
-                Intent intent = new Intent(MenuPrincipalActivity.this, GestionComunidadActivity.class);
-                intent.putExtra("COMUNIDAD_NOMBRE", "Edificio María Eugenia");
-                startActivity(intent);
-            });
-
-            // Cerrar sesión
-            btnLogout.setOnClickListener(v -> {
-                finish(); // Cierra esta pantalla y vuelve al Login
-            });
-        }
+        // En caso de actualización, eliminamos las versiones antiguas para evitar conflictos de columnas
+        db.execSQL("drop table if exists usuarios");
+        db.execSQL("drop table if exists comunidades");
+        db.execSQL("drop table if exists votaciones");
+        onCreate(db);
     }
 }

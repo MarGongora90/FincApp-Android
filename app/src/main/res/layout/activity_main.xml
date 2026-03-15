@@ -1,85 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    PANTALLA: Inicio de Sesión (Login)
+    DESCRIPCIÓN: Formulario de acceso .
+
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="#FFFFFF">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#1A242F">
 
-    <LinearLayout
+    <!-- Icono -->
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:backgroundTint="#3182CE"
+        android:text="F"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FincApp"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="4dp"
+        android:letterSpacing="0.02"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tu comunidad, siempre contigo"
+        android:textSize="15sp"
+        android:textColor="#A0AEC0"
+        android:layout_marginBottom="48dp"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="30dp"
-        android:gravity="center">
+        android:hint="Correo electrónico"
+        android:textColorHint="#718096"
+        app:hintTextColor="#3182CE"
+        app:boxStrokeColor="#3182CE"
+        app:boxBackgroundColor="#2D3748"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="16dp">
 
-        <!-- Espaciador superior para centrar mejor el contenido -->
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
-
-        <!-- Logo o Título de la App -->
-        <TextView
-            android:id="@+id/tvTitulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FincApp"
-            android:textSize="42sp"
-            android:textStyle="bold"
-            android:textColor="#1976D2"
-            android:layout_marginBottom="10dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestión de Comunidades"
-            android:textSize="16sp"
-            android:textColor="#757575"
-            android:layout_marginBottom="50dp"/>
-
-        <!-- Campo de DNI / Usuario -->
-        <EditText
-            android:id="@+id/etUsuario"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="DNI (ej: 12345678A)"
-            android:inputType="textCapCharacters"
-            android:padding="15dp"
-            android:layout_marginBottom="15dp"
-            android:textColor="#333333"
-            android:background="@android:drawable/edit_text"/>
+            android:inputType="textEmailAddress"
+            android:textColor="#FFFFFF"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Campo de Contraseña -->
-        <EditText
+    <!-- CONTENEDOR CONTRASEÑA: Incluye el toggle para ver/ocultar caracteres -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:textColorHint="#718096"
+        app:hintTextColor="#3182CE"
+        app:boxStrokeColor="#3182CE"
+        app:boxBackgroundColor="#2D3748"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#A0AEC0"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contraseña"
             android:inputType="textPassword"
-            android:padding="15dp"
-            android:layout_marginBottom="30dp"
-            android:textColor="#333333"
-            android:background="@android:drawable/edit_text"/>
+            android:textColor="#FFFFFF"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Botón de Acceso -->
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="ENTRAR"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:backgroundTint="#1976D2"
-            android:textColor="#FFFFFF" />
+    <!-- Botón de acción principal -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="INICIAR SESIÓN"
+        android:backgroundTint="#3182CE"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        android:elevation="4dp" />
 
-        <TextView
-            android:id="@+id/tvOlvido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="¿Has olvidado tu contraseña?"
-            android:textColor="#1976D2"
-            android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tvOlvidePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Problemas para entrar? Recuperar contraseña"
+        android:textColor="#A0AEC0"
+        android:layout_marginTop="32dp"
+        android:textSize="13sp"
+        android:clickable="true"
+        android:focusable="true" />
 
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

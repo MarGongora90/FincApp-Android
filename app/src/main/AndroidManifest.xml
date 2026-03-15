@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- REGLA DE ORO: PERMISOS FUERA DE <application> -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +17,7 @@
         android:theme="@style/Theme.FincApp"
         tools:targetApi="31">
 
-        <!-- Pantalla de Login -->
+        <!-- Pantalla de Login (Launcher) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -23,10 +27,18 @@
             </intent-filter>
         </activity>
 
-        <!-- DEBEN ESTAR TODAS ESTAS LÍNEAS -->
-        <activity android:name=".MenuPrincipalActivity" />
-        <activity android:name=".GestionComunidadActivity" />
-        <activity android:name=".TablonAnunciosActivity" />
+        <!-- Otras Actividades -->
+        <activity android:name=".MenuPrincipalActivity" android:exported="false" />
+        <activity android:name=".GestionComunidadActivity" android:exported="false" />
+        <activity android:name=".TablonAnunciosActivity" android:exported="false" />
+        <activity android:name=".DatosPerfilActivity" android:exported="false" />
+        <activity android:name=".VotacionesActivity" android:exported="false" />
+        <activity
+            android:name=".VotacionesActivasActivity"
+            android:exported="false"
+            android:label="Votaciones Activas" />
+        <activity android:name=".VotacionesFinalizadasActivity" android:exported="false" />
+        <activity android:name=".ContactoActivity" android:exported="false" />
 
     </application>
 

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANTALLA: Gestión de Perfil de Usuario
+    DESCRIPCIÓN: Interfaz que permite visualizar y editar la información personal,
+    de contacto.
+    ESTRUCTURA: Uso de ScrollView para asegurar compatibilidad con pantallas pequeñas
+    y CardView para una separación visual limpia de los datos.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A242F"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- CABECERA: Título principal de la pantalla -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mi Perfil"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp" />
+
+        <!-- Subtítulo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestiona tu información personal"
+            android:textAlignment="center"
+            android:textColor="#A0AEC0"
+            android:textSize="14sp"
+            android:layout_marginBottom="25dp" />
+
+        <!-- CONTENEDOR PRINCIPAL: Tarjeta con los campos del formulario -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Información Personal"
+                    android:textColor="#1976D2"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para el nombre del usuario -->
+                <EditText
+                    android:id="@+id/etNombrePerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Nombre completo"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para el DNI/NIE -->
+                <EditText
+                    android:id="@+id/etDNIPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="DNI / NIE"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para la dirección física -->
+                <EditText
+                    android:id="@+id/etDireccionPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Dirección completa"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para el email -->
+                <EditText
+                    android:id="@+id/etEmailPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Correo electrónico"
+                    android:inputType="textEmailAddress"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para el teléfono  -->
+                <EditText
+                    android:id="@+id/etTelefonoPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Teléfono"
+                    android:inputType="phone"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para el número de cuenta bancaria -->
+                <EditText
+                    android:id="@+id/etCuentaPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Cuenta Bancaria (IBAN)"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Campo para la cuota -->
+                <EditText
+                    android:id="@+id/etCuotaPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Cuota mensual (€)"
+                    android:inputType="numberDecimal"
+                    android:background="@android:drawable/editbox_background"
+                    android:paddingLeft="15dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!--Botonera de control -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <!-- Botón para persistir los cambios en la base de datos -->
+            <Button
+                android:id="@+id/btnGuardarPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GUARDAR CAMBIOS"
+                android:backgroundTint="#1976D2"
+                android:textColor="#FFFFFF" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2">
+
+                <!-- Botón para habilitar la edición de campos bloqueados -->
+                <Button
+                    android:id="@+id/btnEditarPerfil"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:text="EDITAR"
+                    android:backgroundTint="#4A5568"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="4dp" />
+
+                <!-- Botón para salir de la actividad actual -->
+                <Button
+                    android:id="@+id/btnVolverPerfil"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:text="VOLVER"
+                    android:backgroundTint="#4A5568"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginLeft="4dp" />
+            </LinearLayout>
+
+            <!-- Botón de cierre de sesión) -->
+            <Button
+                android:id="@+id/btnCerrarSesionPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="CERRAR SESIÓN"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#E53E3E"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

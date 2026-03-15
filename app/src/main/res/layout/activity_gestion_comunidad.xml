@@ -1,157 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    PANTALLA: Menú Principal
+    DESCRIPCIÓN: navegación principal de FincApp.
+    ESTRUCTURA: Usa un FrameLayout como raíz para permitir la superposición
+    de una guía de bienvenida sobre el contenido principal.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center_horizontal"
-    android:background="@drawable/background_gradient">
+    android:background="#1A242F">
 
-    <!-- Título FincApp -->
-    <TextView
-        android:id="@+id/tvNombreComunidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FincApp"
-        android:textColor="#FFFFFF"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp" />
-
-    <!-- Contenedor Azul Oscuro (Lista de botones) -->
+    <!-- CONTENIDO PRINCIPAL: Organizado verticalmente -->
     <LinearLayout
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#002D5A"
-        android:padding="1dp">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/btnInicio"
-            android:layout_width="match_parent"
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvNombreComunidad"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inicio"
-            android:backgroundTint="#002D5A"
+            android:text="FincApp"
             android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:letterSpacing="0.05" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnDatos"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Datos"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
+            android:text="Panel de Control"
+            android:textColor="#A0AEC0"
+            android:textSize="16sp"
+            android:layout_marginBottom="40dp" />
 
-        <View
+        <!-- LISTADO DE OPCIONES-->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Botón de Inicio -->
+                <Button
+                    android:id="@+id/btnInicio"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="🏠   Inicio"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Mis Datos  -->
+                <Button
+                    android:id="@+id/btnDatos"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="👤   Mis Datos"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Recibos -->
+                <Button
+                    android:id="@+id/btnRecibos"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="📄   Recibos y Pagos"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Actas -->
+                <Button
+                    android:id="@+id/btnActas"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="📂   Actas de Reunión"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Votaciones -->
+                <Button
+                    android:id="@+id/btnVotaciones"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="🗳️   Votaciones Activas"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#1976D2"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Tablón -->
+                <Button
+                    android:id="@+id/btnAnuncios"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="📢   Tablón de Anuncios"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Botón Contacto -->
+                <Button
+                    android:id="@+id/btnContacto"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="✉️   Contactar Administrador"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:backgroundTint="#2D3748"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="25dp"
+                    android:layout_marginBottom="10dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Botón de retroceso -->
         <Button
-            android:id="@+id/btnRecibos"
-            android:layout_width="match_parent"
+            android:id="@+id/btnVolver"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recibos"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnActas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Actas"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnAnuncios"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tablón de Anuncios"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnVotaciones"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Votaciones"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnContacto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Contacto"
-            android:backgroundTint="#002D5A"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:stateListAnimator="@null" />
-
+            android:text="Volver"
+            android:textColor="#E53E3E"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp" />
     </LinearLayout>
 
-    <!-- Espaciador -->
-    <View
+    <!--
+        OVERLAY: Guía de bienvenida
+        Este layout se muestra por encima de todo al iniciar la app.
+        Se controla mediante la propiedad visibility="gone/visible".
+    -->
+    <LinearLayout
+        android:id="@+id/layoutGuiaMenu"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <!-- Botón de Cerrar Sesión -->
-    <TextView
-        android:id="@+id/btnVolver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar Sesión"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:layout_marginBottom="30dp"
+        android:layout_height="match_parent"
+        android:background="#E61A202C"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:visibility="gone"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true">
 
-</LinearLayout>
+        <!-- Mensaje emergente estilo Diálogo -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardElevation="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¡Bienvenido! 👋"
+                    android:textColor="#1A202C"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Desde aquí podrás gestionar todo lo relacionado con tu comunidad."
+                    android:textColor="#4A5568"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- Botón para cerrar el overlay -->
+                <Button
+                    android:id="@+id/btnEntendidoMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="ENTENDIDO"
+                    android:backgroundTint="#1976D2"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+</FrameLayout>
