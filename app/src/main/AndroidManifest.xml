@@ -2,41 +2,71 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- REGLA DE ORO: PERMISOS FUERA DE <application> -->
+    <!-- PERMISOS: Necesarios para Firebase y comunicación de red -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FincApp"
-        tools:targetApi="31">
+        android:theme="@style/Theme.FincApp">
 
-        <!-- Pantalla de Login (Launcher) -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Otras Actividades -->
-        <activity android:name=".MenuPrincipalActivity" android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity android:name=".RegistroActivity" android:exported="false" />
+        <activity android:name=".VerificacionActivity" android:exported="false" />
+
+
+        <!-- 3. PANEL DE ADMINISTRADOR (La actividad que creaste) -->
+        <activity
+            android:name=".AdministradorPanelActivity"
+            android:exported="false"
+            android:label="Panel de Administración"
+            android:screenOrientation="portrait" />
+
+        <!-- 4. Gestión de Comunidad (Llamada desde el panel admin) -->
+        <activity
+            android:name=".CrearComunidadActivity"
+            android:exported="false"
+            android:label="Nueva Comunidad" />
+
+        <!-- 5. Menú Principal para Propietarios -->
+        <activity
+            android:name=".MenuPrincipalActivity"
+            android:exported="false"
+            android:label="Mi Comunidad" />
+
+        <!-- 6. Otras Actividades de Funcionalidad -->
         <activity android:name=".GestionComunidadActivity" android:exported="false" />
         <activity android:name=".TablonAnunciosActivity" android:exported="false" />
         <activity android:name=".DatosPerfilActivity" android:exported="false" />
         <activity android:name=".VotacionesActivity" android:exported="false" />
+        <activity android:name=".GestionUsariosActivity" />
+        <activity
+            android:name=".CrearVotacionActivity"  android:exported="false" />
+        <activity android:name=".ListaVotacionesActivity"
+            android:exported="false" />
+
         <activity
             android:name=".VotacionesActivasActivity"
             android:exported="false"
             android:label="Votaciones Activas" />
+
         <activity android:name=".VotacionesFinalizadasActivity" android:exported="false" />
         <activity android:name=".ContactoActivity" android:exported="false" />
 

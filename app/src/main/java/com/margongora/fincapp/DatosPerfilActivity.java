@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Actividad para visualizar y editar el perfil del usuario.
  * Gestiona el bloqueo de campos y la actualización en Firestore.
- ** @author Mar Góngora
+ ** @author Maria del Mar Góngora Sarabia
  */
 public class DatosPerfilActivity extends AppCompatActivity {
 

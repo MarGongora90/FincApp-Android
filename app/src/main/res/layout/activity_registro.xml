@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANTALLA: Gestión de registro de nuevo usuario
+    DESCRIPCIÓN: Interfaz que permite registrarse a un nuevo usuario
+
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crear Cuenta FincApp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="32dp" />
+
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="Nombre completo"
+            android:inputType="textPersonName"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="Contraseña (mín. 6 caracteres)"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecciona tu perfil:"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgRoles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+    <!-- Elegir opción de rol propietario o administrador -->
+            <RadioButton
+                android:id="@+id/rbPropietario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Propietario"
+                android:checked="true"
+                android:layout_marginRight="16dp" />
+
+            <RadioButton
+                android:id="@+id/rbAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Administrador" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/layoutSeleccionComunidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mis Comunidades:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+            <!-- Seleccionar una o mas comunidades de las que se pertenece -->
+            <Button
+                android:id="@+id/btnSeleccionarComunidades"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Seleccionar Comunidades"
+                android:textAllCaps="false"
+                android:backgroundTint="#757575" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Puedes elegir varias comunidades"
+                android:textSize="12sp"
+                android:textColor="#757575"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+        <!-- Boton registrar -->
+        <Button
+            android:id="@+id/btnRegistrar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="REGISTRARSE"
+            android:backgroundTint="#2196F3"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

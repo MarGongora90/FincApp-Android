@@ -75,6 +75,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation ("com.sun.mail:android-mail:1.6.2")
+    implementation ("com.sun.mail:android-activation:1.6.2")
 
 
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")

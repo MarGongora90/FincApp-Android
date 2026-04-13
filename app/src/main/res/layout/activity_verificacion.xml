@@ -1,0 +1,48 @@
+<!--
+    PANTALLA: Gestión de verificacion usuario
+    DESCRIPCIÓN: Interfaz que permite verificar al usuario registrado, introduciendo codigo recibido por mail
+-->
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verifica tu cuenta"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Introduce el código de 6 dígitos enviado a tu correo "
+        android:gravity="center"
+        android:layout_marginBottom="30dp"/>
+
+    <EditText
+        android:id="@+id/etCodigoVerificacion"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="000000"
+        android:inputType="number"
+        android:maxLength="6"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"/>
+    <!-- boton verificafr codigo -->
+    <Button
+        android:id="@+id/btnValidarCodigo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="ACTIVAR CUENTA"
+        android:backgroundTint="#4CAF50"/>
+
+</LinearLayout>

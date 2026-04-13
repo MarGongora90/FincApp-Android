@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 /**
  * Clase auxiliar para la gestión de la base de datos local SQLite de FincApp.
  * Se utiliza para persistencia de datos básicos en el dispositivo.
- * * @author Mar Góngora
+ * * @author Maria del Mar Góngora Sarabia
  */
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 

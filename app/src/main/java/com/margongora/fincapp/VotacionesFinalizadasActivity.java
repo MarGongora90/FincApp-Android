@@ -10,22 +10,19 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Locale;
 
 /**
- * Actividad encargada de consultar y mostrar los resultados finales de una votación específica.
- * <p>
- * Implementa una lógica de consulta basada en el campo 'votacionId' dentro de la
- * jerarquía de colecciones del proyecto.
- * </p>
+ * Pantalla encargada de mostrar los resultados finales de una votación ya cerrada.
+ * Recupera el recuento de votos a favor, en contra y la cuota de participación
+ * desde la base de datos para informar a los vecinos del resultado.
+ * * @author Maria del Mar Góngora Sarabia
  */
 public class VotacionesFinalizadasActivity extends AppCompatActivity {
 
-    //PAra ver el Logcat
     private static final String TAG = "FINCAPP_LOG";
 
-    // Componentes de la Interfaz de Usuario
+
     private TextView tvTitulo, tvResFavor, tvResContra, tvResAbstencion, tvCuotaRes;
     private Button btnVolver;
 
-    /** Instancia de la base de datos Firestore. */
     private FirebaseFirestore db;
 
     @Override
@@ -33,9 +30,7 @@ public class VotacionesFinalizadasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_votaciones_finalizadas);
 
-        Log.d(TAG, "Activity Iniciada correctamente");
-
-        // Vinculación de los componentes del layout XML
+        // Inicializamos los componentes del diseño
         tvTitulo = findViewById(R.id.tvTituloVotacionFinalizada);
         tvResFavor = findViewById(R.id.tvResFavor);
         tvResContra = findViewById(R.id.tvResContra);
@@ -45,75 +40,70 @@ public class VotacionesFinalizadasActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        // Estado inicial de carga
-        tvTitulo.setText("Buscando en base de datos...");
 
-        // Identificador de la votación que deseamos consultar.
-        String tituloIdBuscado = "Cambio administrador";
+        tvTitulo.setText("Consultando acta digital...");
 
-        consultarFirestore(tituloIdBuscado);
+        consultarResultados();
 
-        // Finaliza la actividad para regresar al menú anterior
+        // Botón para cerrar la pantalla y volver al menú
         btnVolver.setOnClickListener(v -> finish());
     }
 
-    /**
-     * Realiza la petición a Firestore para obtener los datos del documento de votación.
-     * <p>
-     * Utiliza una ruta de colección estricta: artifacts -> fincapp -> public -> data -> votos.
-     * </p>
-     * * @param id El identificador de la votación
-     */
-    private void consultarFirestore(String id) {
-        Log.d(TAG, "Consultando colección: artifacts/fincapp/public/data/votos");
 
-        db.collection("artifacts")
-                .document("fincapp")
-                .collection("public")
-                .document("data")
+    private void consultarResultados() {
+        // Recuperamos la información enviada por el Intent
+        String tempVotacionId = getIntent().getStringExtra("VOTACION_ID");
+        String tempComunidadId = getIntent().getStringExtra("COMUNIDAD_ID");
+
+        // Valores por defecto en caso de que no lleguen los datos
+        //if (tempVotacionId == null) tempVotacionId = "Instalacion de Camaras";
+       // if (tempComunidadId == null) tempComunidadId = "Gt05Vb5eJsJc...";
+
+        final String idBuscado = tempVotacionId;
+        final String comunidadPath = tempComunidadId;
+
+        tvTitulo.setText("Cargando: " + idBuscado);
+
+        // Accedemos a la colección de votos de la comunidad específica
+        db.collection("artifacts/fincapp/public/data/comunidades")
+                .document(comunidadPath)
                 .collection("votos")
-                .whereEqualTo("votacionId", id)
+                .whereEqualTo("votacionId", idBuscado)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
 
-                        if (task.getResult() != null && !task.getResult().isEmpty()) {
-                            Log.d(TAG, "Documento encontrado");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                actualizarCampos(document);
-                            }
-                        } else {
-                            Log.e(TAG, "No existe el documento con votacionId: " + id);
-                            tvTitulo.setText("ERROR: No se encontró '" + id + "'");
-                        }
+                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) queryDocumentSnapshots.getDocuments().get(0);
+                        actualizarInterfaz(document);
                     } else {
-                        // Gestión de errores o permisos
-                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Error desconocido";
-                        Log.e(TAG, "Fallo de conexión: " + errorMsg);
-                        tvTitulo.setText("ERROR DB: " + errorMsg);
+                        tvTitulo.setText("No se han encontrado resultados");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al consultar resultados: " + e.getMessage());
+                    tvTitulo.setText("Error al conectar con la base de datos");
                 });
     }
 
     /**
-     * Extrae la información del documento de Firestore y actualiza la UI.
-     * * @param doc El documento de Firestore que contiene los resultados.
+     * Toma los datos numéricos de la base de datos y los escribe en la pantalla.
      */
-    private void actualizarCampos(QueryDocumentSnapshot doc) {
-        tvTitulo.setText(doc.getString("votacionId"));
+    private void actualizarInterfaz(QueryDocumentSnapshot doc) {
 
-        // Extracción segura de valores numéricos
         Double favor = doc.getDouble("favor");
         Double contra = doc.getDouble("contra");
         Double abstencion = doc.getDouble("abstencion");
         Double cuota = doc.getDouble("cuota_participacion");
+        String titulo = doc.getString("votacionId");
 
-        // Formateo de los datos en los TextViews correspondientes
-        tvResFavor.setText(String.format(Locale.getDefault(), "%.1f", favor != null ? favor : 0.0));
-        tvResContra.setText(String.format(Locale.getDefault(), "%.1f", contra != null ? contra : 0.0));
-        tvResAbstencion.setText(String.format(Locale.getDefault(), "%.1f", abstencion != null ? abstencion : 0.0));
-        tvCuotaRes.setText(String.format(Locale.getDefault(), "%.1f%%", cuota != null ? cuota : 0.0));
+        tvTitulo.setText(titulo != null ? titulo : "Resultado Final");
 
-        Log.d(TAG, "UI Actualizada con éxito");
+
+        tvResFavor.setText(String.format(Locale.getDefault(), "%.0f", favor != null ? favor : 0.0));
+        tvResContra.setText(String.format(Locale.getDefault(), "%.0f", contra != null ? contra : 0.0));
+        tvResAbstencion.setText(String.format(Locale.getDefault(), "%.0f", abstencion != null ? abstencion : 0.0));
+
+
+        tvCuotaRes.setText(String.format(Locale.getDefault(), "%.2f%%", cuota != null ? cuota : 0.0));
     }
 }

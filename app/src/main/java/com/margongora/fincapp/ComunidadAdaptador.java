@@ -9,66 +9,63 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- * Adaptador para el RecyclerView que gestiona la visualización de las comunidades.
- * <p>
- * Se encarga de inflar el diseño individual de cada comunidad y de vincular los datos
- * del modelo {@link Comunidad} con los componentes del XML.
- * </p>
-
+ * Adaptador para el componente {@link RecyclerView} encargado de la
+ * gestión de objetos {@link Comunidad}.
+ * * Implementa el patrón ViewHolder para optimizar el rendimiento del scroll mediante
+ * el reciclaje de vistas, minimizando las llamadas al método findViewById().
+ * * @author Maria del Mar Góngora Sarabia
  */
 public class ComunidadAdaptador extends RecyclerView.Adapter<ComunidadAdaptador.ViewHolder> {
 
     private List<Comunidad> comunidades;
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     /**
-     * Interfaz para gestionar los eventos de clic en los elementos de la lista.
+     * Definición de interfaz para el desacoplamiento de la lógica de clics.
+     * Permite que la Activity implemente la acción de navegación.
      */
     public interface OnItemClickListener {
         /**
-         * Cuando el usuario pulsa sobre una comunidad.
-         * @param comunidad Objeto comunidad de la posición pulsada.
+         * Callback disparado al detectar un evento de selección en el item.
+         * @param comunidad Entidad de datos asociada a la posición seleccionada.
          */
         void onItemClick(Comunidad comunidad);
     }
 
-    /**
-     * Constructor del adaptador.
-     * @param comunidades Lista inicial de comunidades a mostrar.
-     * @param listener Implementación de la interfaz para manejar eventos de clic.
-     */
     public ComunidadAdaptador(List<Comunidad> comunidades, OnItemClickListener listener) {
         this.comunidades = comunidades;
         this.listener = listener;
     }
 
+    /**
+     * Instancia el ViewHolder inflando el diseño XML (item_comunidad)
+     * y definiendo el contexto de visualización.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_comunidad, parent, false);
         return new ViewHolder(view);
     }
 
+    /**
+     * Gestiona la lógica de presentación dinámica, como el conteo de colecciones anidadas.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comunidad comunidad = comunidades.get(position);
 
-        //Datos básicos
         holder.tvNombre.setText(comunidad.getNombre());
 
         if (comunidad.getDireccion() != null) {
             holder.tvDireccion.setText(comunidad.getDireccion());
         }
 
-        /**
-         * Cálculo dinámico del número de propietarios.
-         */
+        // Lógica de presentación: Cálculo de cardinalidad de la lista de usuarios
         int count = (comunidad.getUsuarios() != null) ? comunidad.getUsuarios().size() : 0;
         holder.tvPropietariosCount.setText("Propietarios: " + count);
 
-        // Configuración del listener de clic para el elemento completo
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(comunidad);
         });
@@ -80,25 +77,24 @@ public class ComunidadAdaptador extends RecyclerView.Adapter<ComunidadAdaptador.
     }
 
     /**
-     * Actualiza la lista de datos  y notifica los cambios al RecyclerView.
-     * @param comunidades Nueva lista de comunidades.
+     * Actualiza el dataset del adaptador. Invoca notifyDataSetChanged() para
+     * invalidar la vista actual y forzar el refresco del RecyclerView.
+     * @param comunidades Nueva colección de datos.
      */
     public void setComunidades(List<Comunidad> comunidades) {
         this.comunidades = comunidades;
         notifyDataSetChanged();
     }
 
-
+    /**
+     * Clase interna que actúa como contenedor de referencias a las vistas hijas
+     * del item, evitando redundancia en el acceso al árbol de vistas.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre;
-        TextView tvDireccion;
-        TextView tvInfoExtra;
-        /** TextView que muestra el total de propietarios. */
-        TextView tvPropietariosCount;
+        TextView tvNombre, tvDireccion, tvInfoExtra, tvPropietariosCount;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvNombre = itemView.findViewById(R.id.tvNombreComunidad);
             tvDireccion = itemView.findViewById(R.id.tvDireccionComunidad);
             tvInfoExtra = itemView.findViewById(R.id.tvInfoExtra);

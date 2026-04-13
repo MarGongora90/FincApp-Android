@@ -1,116 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
-    PANTALLA: Inicio de Sesión (Login)
-    DESCRIPCIÓN: Formulario de acceso .
+    PANTALLA: Acceso a usuario complementa a activityLogin
+    DESCRIPCIÓN: Interfaz que permite acceder o registrarte.
 
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="32dp"
-    android:background="#1A242F">
+    android:fillViewport="true"
+    android:background="#F5F7FA">
 
-    <!-- Icono -->
-    <TextView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:backgroundTint="#3182CE"
-        android:text="F"
-        android:textColor="#FFFFFF"
-        android:textSize="40sp"
-        android:textStyle="bold"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="24dp" />
+        android:padding="32dp">
 
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FincApp"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="4dp"
-        android:letterSpacing="0.02"/>
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FincApp"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:textColor="#1A73E8"
+            android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tu comunidad, siempre contigo"
-        android:textSize="15sp"
-        android:textColor="#A0AEC0"
-        android:layout_marginBottom="48dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gestión de Comunidades SaaS"
+            android:textSize="14sp"
+            android:textColor="#5F6368"
+            android:layout_marginBottom="40dp"/>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
-        android:textColorHint="#718096"
-        app:hintTextColor="#3182CE"
-        app:boxStrokeColor="#3182CE"
-        app:boxBackgroundColor="#2D3748"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEmail"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:textColor="#FFFFFF"
-            android:padding="16dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Correo electrónico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginBottom="16dp">
 
-    <!-- CONTENEDOR CONTRASEÑA: Incluye el toggle para ver/ocultar caracteres -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:textColorHint="#718096"
-        app:hintTextColor="#3182CE"
-        app:boxStrokeColor="#3182CE"
-        app:boxBackgroundColor="#2D3748"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="#A0AEC0"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginBottom="32dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassword"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+            android:hint="Contraseña"
+            app:passwordToggleEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- Boton login -->
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="INICIAR SESIÓN"
+            android:backgroundTint="#1A73E8"
             android:textColor="#FFFFFF"
-            android:padding="16dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:elevation="4dp" />
 
-    <!-- Botón de acción principal -->
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="INICIAR SESIÓN"
-        android:backgroundTint="#3182CE"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:cornerRadius="12dp"
-        android:elevation="4dp" />
+        <TextView
+            android:id="@+id/tvOlvidePass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Has olvidado tu contraseña?"
+            android:textColor="#1A73E8"
+            android:layout_marginTop="24dp"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tvOlvidePass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="¿Problemas para entrar? Recuperar contraseña"
-        android:textColor="#A0AEC0"
-        android:layout_marginTop="32dp"
-        android:textSize="13sp"
-        android:clickable="true"
-        android:focusable="true" />
+        <TextView
+            android:id="@+id/tvGoToRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes cuenta? Regístrate aquí"
+            android:textColor="#1A73E8"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="8dp" />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

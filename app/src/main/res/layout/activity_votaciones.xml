@@ -1,100 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    PANTALLA: Selección de Votaciones
-    DESCRIPCIÓN: Menú intermedio para elegir entre consultas en curso o historial.
-
+    PANTALLA: Gestión de opcion de votaciones
+    DESCRIPCIÓN: Interfaz que permite visualizar las opciones de votaciones activas o finalizadas
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A242F"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="#F4F7F9">
 
-    <!-- TÍTULOS DE CABECERA -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Votaciones"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Selecciona el estado de las consultas"
-        android:textColor="#A0AEC0"
-        android:textSize="16sp"
-        android:layout_marginBottom="40dp" />
-
-    <!-- TARJETA: VOTACIONES ACTIVAS -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardActivas"
+    <View
+        android:id="@+id/headerVotaciones"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="#2D3748"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
+        android:layout_height="140dp"
+        android:background="#2196F3"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp">
-
-            <TextView
-                android:id="@+id/btnActivas"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="VOTACIONES ACTIVAS"
-                android:textColor="#63B3ED"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- TARJETA: VOTACIONES FINALIZADAS -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardFinalizadas"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="#2D3748"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
-
-        <TextView
-            android:id="@+id/btnFinalizadas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="VOTACIONES FINALIZADAS"
-            android:textColor="#A0AEC0"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
-
-    <!-- ENLACE DE RETORNO -->
     <TextView
         android:id="@+id/txtVolver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="← Volver al menú"
-        android:textColor="#CBD5E0"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="← Volver"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:padding="12dp" />
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/titleVotaciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Votaciones"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/headerVotaciones"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/headerVotaciones" />
+
+    <!-- CONTENEDOR DE BOTONES  -->
+    <LinearLayout
+        android:id="@+id/containerFiltros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@id/headerVotaciones">
+
+        <Button
+            android:id="@+id/btnVotacionesActivas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="Activas"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnVotacionesFinalizadas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Finalizadas"
+            android:backgroundTint="#757575"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerVotaciones"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/containerFiltros"
+        tools:listitem="@android:layout/simple_list_item_2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

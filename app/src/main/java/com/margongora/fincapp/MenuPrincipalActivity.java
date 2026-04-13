@@ -1,151 +1,182 @@
 package com.margongora.fincapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Actividad que gestiona la pantalla de selección de comunidades.
- * <p>
- * Se encarga de conectar con Firebase Firestore, recuperar la lista de comunidades
- * disponibles y presentarlas mediante un {@link RecyclerView}.
- * </p>
- * * @author Mar Góngora
+ * Dashboard principal del usuario. Gestiona la lógica de  datos
+ * para perfiles multi-comunidad.
+ * * @author Maria del Mar Góngora Sarabia
+ * @version 1.3
  */
 public class MenuPrincipalActivity extends AppCompatActivity implements ComunidadAdaptador.OnItemClickListener {
 
-    /** Etiqueta para logs de depuración. */
     private static final String TAG = "MenuPrincipal";
+    private static final String PATH_USUARIOS = "artifacts/fincapp/public/data/usuarios";
+    private static final String PATH_COMUNIDADES = "artifacts/fincapp/public/data/comunidades";
 
-    /** Componente para mostrar la lista de comunidades. */
     private RecyclerView recyclerView;
-
-    /** Adaptador que vincula los datos de la lista con la interfaz visual. */
     private ComunidadAdaptador adapter;
-
-    /** Lista local que almacena los objetos de tipo Comunidad recuperados. */
     private List<Comunidad> listaComunidades;
-
-    /** Instancia de la base de datos de Firebase. */
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
-    /** Barra de progreso para indicar carga de datos. */
     private ProgressBar progressBar;
-
-    /** Botón para cerrar la sesión actual. */
-    private MaterialButton btnLogout;
+    private MaterialButton btnLogout, btnAdminPanel;
+    private TextView tvNombreUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
 
-        // Inicialización de Firebase Firestore
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-        vincularComponentes();
-        configurarBotones();
-        cargarComunidadesDesdeFirestore();
+        initInterface();
+        gestionarOnboardingLocal();
+        sincronizarPerfilYComunidades();
     }
 
-    /**
-     * Inicializa las vistas y configura el RecyclerView con su LayoutManager y Adaptador.
-     */
-    private void vincularComponentes() {
+    private void initInterface() {
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.rvComunidades);
         btnLogout = findViewById(R.id.btnLogout);
+        btnAdminPanel = findViewById(R.id.btnAdminPanel);
+        tvNombreUsuario = findViewById(R.id.tvNombreUsuario);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         listaComunidades = new ArrayList<>();
-
         adapter = new ComunidadAdaptador(listaComunidades, this);
         recyclerView.setAdapter(adapter);
+
+        btnLogout.setOnClickListener(v -> ejecutarSignOut());
     }
 
     /**
-     * Configura los listeners para los botones de la interfaz.
+     * Implementa la lógica de bienvenida persistida en {@link SharedPreferences}.
+     * Garantiza que el flujo explicativo se presente únicamente en la primera
+     * instancia de acceso al panel principal.
      */
-    private void configurarBotones() {
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> {
+    private void gestionarOnboardingLocal() {
+        SharedPreferences prefs = getSharedPreferences("ConfigApp", MODE_PRIVATE);
+        if (prefs.getBoolean("isFirstTimeMenu", true)) {
+            prefs.edit().putBoolean("isFirstTimeMenu", false).apply();
 
-                Intent intent = new Intent(MenuPrincipalActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            });
+            new AlertDialog.Builder(this)
+                    .setTitle("¡Bienvenido a tu Panel!")
+                    .setMessage("Desde aqui tendrás acceso a tus propiedades:\n\n" +
+                            "• Participación en procesos de voto.\n" +
+                            "• Consulta de histórico de actas.\n" +
+                            "• Gestión de perfil de usuario.")
+                    .setPositiveButton("Entendido", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(false)
+                    .show();
         }
     }
 
     /**
-     * Realiza una petición asíncrona a Firestore para obtener los documentos de la colección.
+     * Recupera el perfil del usuario autenticado.
+     * Gestiona la polimorfia del campo 'idComunidad' (soporta tipos String y List)
+     * para asegurar la compatibilidad con diferentes esquemas de registro.
      */
-    private void cargarComunidadesDesdeFirestore() {
+    private void sincronizarPerfilYComunidades() {
+        String uid = mAuth.getUid();
+        if (uid == null) return;
+
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
 
-        // Acceso a la colección siguiendo la estructura jerárqu. establecida
-        db.collection("artifacts")
-                .document("fincapp")
-                .collection("public")
-                .document("data")
-                .collection("comunidades")
-                .get()
-                .addOnCompleteListener(task -> {
-
-                    if (progressBar != null) progressBar.setVisibility(View.GONE);
-
-                    if (task.isSuccessful()) {
-                        listaComunidades.clear();
-
-                        if (task.getResult().isEmpty()) {
-                            Log.d(TAG, "No hay documentos en la ruta especificada.");
-                            Toast.makeText(this, "No se encontraron comunidades", Toast.LENGTH_SHORT).show();
-                        }
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            try {
-                                Comunidad comunidad = document.toObject(Comunidad.class);
-
-                                if (comunidad != null) {
-                                    comunidad.setId(document.getId());
-                                    listaComunidades.add(comunidad);
-                                    Log.d(TAG, "Cargada: " + comunidad.getNombre());
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error de mapeo en documento: " + document.getId(), e);
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
+        db.collection(PATH_USUARIOS).document(uid).get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        actualizarHeaderUI(doc);
+                        procesarEntidadesVinculadas(doc.get("idComunidad"));
                     } else {
-                        Log.e(TAG, "Error en Firestore: ", task.getException());
-                        Toast.makeText(MenuPrincipalActivity.this,
-                                "Error de conexión: " + task.getException().getLocalizedMessage(),
-                                Toast.LENGTH_LONG).show();
+                        manejarErrorPersistencia();
                     }
-                });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Excepción en sincronización: ", e));
+    }
+
+    private void actualizarHeaderUI(DocumentSnapshot doc) {
+        String nombre = doc.getString("nombre");
+        String rol = doc.getString("rol");
+        if (nombre != null) tvNombreUsuario.setText("Hola, " + nombre);
+        if ("administrador".equalsIgnoreCase(rol)) btnAdminPanel.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Maneja el evento de clic en un elemento de la lista.
-     * Redirige a la gestión detallada de la comunidad seleccionada.
-     * * @param comunidad Objeto comunidad seleccionado por el usuario.
+     *  Resolución de referencias cruzadas.
+     * Convierte el ID (o lista de IDs) en una colección de Tareas asíncronas
+     * para recuperar las entidades completas de la colección 'comunidades'.
      */
+    private void procesarEntidadesVinculadas(Object campoComunidad) {
+        List<String> ids = new ArrayList<>();
+
+        if (campoComunidad instanceof List) {
+            ids.addAll((List<String>) campoComunidad);
+        } else if (campoComunidad instanceof String) {
+            ids.add((String) campoComunidad);
+        }
+
+        if (!ids.isEmpty()) {
+            ejecutarCargaParalela(ids);
+        } else {
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Implementa la ejecución concurrente de peticiones de red.
+     * Utiliza  para sincronizar la
+     * actualización del adaptador una vez todas las promesas han sido resueltas.
+     */
+    private void ejecutarCargaParalela(List<String> idsComunidad) {
+        List<Task<DocumentSnapshot>> tareas = new ArrayList<>();
+
+        for (String id : idsComunidad) {
+            tareas.add(db.collection(PATH_COMUNIDADES).document(id).get());
+        }
+
+        Tasks.whenAllSuccess(tareas).addOnSuccessListener(resultados -> {
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
+            listaComunidades.clear();
+
+            for (Object res : resultados) {
+                DocumentSnapshot doc = (DocumentSnapshot) res;
+                if (doc.exists()) {
+                    Comunidad c = doc.toObject(Comunidad.class);
+                    if (c != null) {
+                        c.setId(doc.getId());
+                        listaComunidades.add(c);
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
+        });
+    }
+
     @Override
     public void onItemClick(Comunidad comunidad) {
         Intent intent = new Intent(this, GestionComunidadActivity.class);
@@ -154,11 +185,16 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Comunida
         startActivity(intent);
     }
 
-    /**
-     * Método vinculado al botón de refresco del layout (si se añade uno en el XML).
-     * @param view La vista que lanza el evento.
-     */
-    public void onBtnRefrescarClick(View view) {
-        cargarComunidadesDesdeFirestore();
+    private void ejecutarSignOut() {
+        mAuth.signOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void manejarErrorPersistencia() {
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        Toast.makeText(this, "Error: Perfil de usuario", Toast.LENGTH_SHORT).show();
     }
 }

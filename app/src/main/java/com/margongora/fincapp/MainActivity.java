@@ -1,177 +1,163 @@
 package com.margongora.fincapp;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 /**
- * CLASE PRINCIPAL: MainActivity
- * * Esta clase gestiona la entrada a la aplicación FincApp.
- * Se encarga de la autenticación de usuarios mediante Firebase Auth
- * * @author Mar Góngora
-  */
+ * Controlador de entrada a la aplicación.
+ * * Gestiona el ciclo de vida de la autenticación mediante Firebase Auth y actúa como
+ * middleware de autorización, validando el estado de verificación del perfil y
+ * redirigiendo al usuario hacia el dashboard correspondiente (Admin o Propietario)
+ * según los privilegios definidos en Cloud Firestore.
+ * * @author Maria del Mar Góngora Sarabia
+ */
 public class MainActivity extends AppCompatActivity {
 
-    /** Campo de texto para el correo electrónico del usuario */
-    private EditText etEmail;
-    /** Campo de texto para la contraseña del usuario */
-    private EditText etPassword;
-    /** Botón para ejecutar el inicio de sesión */
+    private TextInputEditText etEmail, etPassword;
     private Button btnLogin;
-    /** Instancia de Firebase Auth para gestionar la sesión */
+    private TextView tvGoToRegister;
     private FirebaseAuth mAuth;
-    /** Instancia de Firestore para acceder a los datos de la comunidad */
     private FirebaseFirestore db;
+
+    // Rutas para la persistencia en el backend NoSQL
+    private static final String BASE_PATH = "artifacts/fincapp/public/data/";
+    private static final String RUTA_USUARIOS = BASE_PATH + "usuarios";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Flag de sistema para evitar el timeout de pantalla durante el proceso de login
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
-        // Inicialización de servicios de Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Vinculación de componentes de la UI
+        initInterface();
+    }
+
+    /**
+     * Inicializa los componentes de la vista y vincula los listeners de eventos.
+     */
+    private void initInterface() {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        tvGoToRegister = findViewById(R.id.tvGoToRegister);
 
-        // bienvenida inicial
-        comprobarPrimerAcceso();
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intentarLogin();
-            }
-        });
+        btnLogin.setOnClickListener(v -> ejecutarFlujoLogin());
+        tvGoToRegister.setOnClickListener(v ->
+                startActivity(new Intent(this, RegistroActivity.class))
+        );
     }
 
     /**
-     * Valida los campos de entrada antes de la autenticación.
-     * Verifica que el email sea válido y la contraseña cumpla con la longitud.
+     * Dirige el proceso de login.
+     * Realiza la validación sintáctica de los campos y lanza la petición asíncrona
+     * al proveedor de identidad de Firebase.
      */
-    private void intentarLogin() {
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+    private void ejecutarFlujoLogin() {
+        final String email = etEmail.getText().toString().trim();
+        final String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Introduce un email válido");
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Error de validación: Credenciales incompletas", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (password.isEmpty() || password.length() < 6) {
-            etPassword.setError("Se necesitan 6 caracteres");
-            return;
-        }
-
-        realizarAuthEnFirebase(email, password);
-    }
-
-    /**
-     * Realiza la llamada a Firebase Auth.
-     * * @param email Correo electrónico del usuario.
-     * @param password Contraseña del usuario.
-     */
-    private void realizarAuthEnFirebase(String email, String password) {
-        btnLogin.setEnabled(false);
+        toggleInteraccion(false);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-
-                        obtenerNombreDeUsuarioYContinuar();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) sincronizarPerfilUsuario(user.getUid());
                     } else {
-                        btnLogin.setEnabled(true);
-                        mostrarError("Acceso Erróneo", "Correo o contraseña incorrecta.");
+                        toggleInteraccion(true);
+                        Toast.makeText(this, "Error de autenticación: Credenciales no válidas", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     /**
-     * Consulta la colección 'usuarios' en Firestore para recuperar el nombre.
-     * Da una bienvenida personalizada en lugar del email.
+     * Recupera el documento del usuario desde Firestore para aplicar la lógica
+     * de control de acceso basada en el estado de verificación y roles.
      */
-    private void obtenerNombreDeUsuarioYContinuar() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            db.collection("usuarios").document(user.getUid())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        String nombreReal = "";
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                nombreReal = document.getString("nombre");
-                            }
-                        }
+    private void sincronizarPerfilUsuario(String uid) {
+        db.collection(RUTA_USUARIOS).document(uid).get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) {
+                        manejarSesionInvalida();
+                        return;
+                    }
 
-                        // Si no hay nombre, coge parte del mail
-                        if (nombreReal == null || nombreReal.isEmpty()) {
-                            nombreReal = user.getEmail().split("@")[0];
-                        }
+                    // 1. Capa de Seguridad: Verificación de activación de cuenta
+                    Boolean verificado = doc.getBoolean("verificado");
+                    if (verificado == null || !verificado) {
+                        toggleInteraccion(true);
+                        lanzarActividad(VerificacionActivity.class, null);
+                        return;
+                    }
 
-                        Toast.makeText(MainActivity.this, "¡Bienvenido, " + nombreReal + "!", Toast.LENGTH_SHORT).show();
-                        irAlMenuPrincipal(nombreReal);
-                    });
+                    // 2. Capa de Negocio: Selección de flujo por Rol
+                    String rol = doc.getString("rol");
+                    List<String> comunidades = (List<String>) doc.get("idComunidad");
+
+                    if ("administrador".equalsIgnoreCase(rol)) {
+                        lanzarActividad(AdministradorPanelActivity.class, null);
+                    } else if ("propietario".equalsIgnoreCase(rol)) {
+                        gestionarNavegacionPropietario(comunidades);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    toggleInteraccion(true);
+                    Log.e("FIRESTORE_ERROR", "Fallo al recuperar datos del perfil", e);
+                });
+    }
+
+    private void gestionarNavegacionPropietario(List<String> comunidades) {
+        if (comunidades == null || comunidades.isEmpty()) {
+            toggleInteraccion(true);
+            Toast.makeText(this, "Error de perfil: No se han vinculado comunidades", Toast.LENGTH_LONG).show();
+        } else {
+            // Se inyecta el ID de la comunidad principal para el contexto del menú
+            lanzarActividad(MenuPrincipalActivity.class, comunidades.get(0));
         }
     }
 
     /**
-     * Diálogo de alerta para errores del sistema.
+     * Ejecuta la transición entre Activities limpiando el stack de navegación
+     * para evitar retrocesos accidentales tras el login (FLAG_ACTIVITY_CLEAR_TASK).
      */
-    private void mostrarError(String titulo, String mensaje) {
-        new AlertDialog.Builder(this)
-                .setTitle(titulo)
-                .setMessage(mensaje)
-                .setPositiveButton("Aceptar", null)
-                .show();
-    }
-
-    /**
-     * Transición a la actividad principal del menú.
-     * @param nombreUsuario El nombre recuperado para ser usado en el resto de pantallas.
-     */
-    private void irAlMenuPrincipal(String nombreUsuario) {
-        Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
-        intent.putExtra("USUARIO_NOMBRE", nombreUsuario);
+    private void lanzarActividad(Class<?> destino, String idComunidad) {
+        Intent intent = new Intent(this, destino);
+        if (idComunidad != null) intent.putExtra("idComunidad", idComunidad);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 
-    /**
-     * Implementa la guía de usuario utilizando SharedPreferences.
-     * Se muestra únicamente la primera vez que se ejecuta la aplicación tras la instalación.
-     */
-    private void comprobarPrimerAcceso() {
-        SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
-        boolean esPrimerInicio = sharedPref.getBoolean("isFirstRun", true);
+    private void manejarSesionInvalida() {
+        toggleInteraccion(true);
+        mAuth.signOut();
+        Toast.makeText(this, "Error: El perfil de usuario no existe", Toast.LENGTH_SHORT).show();
+    }
 
-        if (esPrimerInicio) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Bienvenido a FincApp")
-                    .setMessage("Esta es una herramienta para la gestión de su comunidad.\n\nAcceda con sus credenciales proporcionadas por el administrador.")
-                    .setPositiveButton("Comenzar", (dialog, which) -> {
-                        sharedPref.edit().putBoolean("isFirstRun", false).apply();
-                    })
-                    .setCancelable(false)
-                    .show();
-        }
+    private void toggleInteraccion(boolean habilitar) {
+        btnLogin.setEnabled(habilitar);
     }
 }

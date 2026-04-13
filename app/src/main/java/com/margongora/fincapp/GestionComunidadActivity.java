@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
  * Menú principal tras seleccionar una comunidad.
  * Gestiona la navegación hacia los diferentes módulos (Votaciones, Anuncios, Perfil)
  * y controla la visualización de una guía de usuario única.
- *  * @author Mar Góngora
+ *  * @author Maria del Mar Góngora Sarabia
  * </p>
  */
 public class GestionComunidadActivity extends AppCompatActivity {

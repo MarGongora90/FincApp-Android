@@ -5,63 +5,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entidad de datos que representa una Comunidad de Vecinos en FincApp.
- * <p>
- * Implementa {@link Serializable} para permitir el paso de objetos entre Activities.
- *  * @author Mar Góngora
- * </p>
+ * Modelo de datos (POJO) que representa la entidad "Comunidad" en el sistema.
+ * * Esta clase actúa como un puente de datos entre Cloud Firestore y la interfaz de usuario.
+ * Implementa la interfaz {@link Serializable} para facilitar la persistencia temporal
+ * y la transferencia de objetos complejos entre componentes mediante el Bundle de los Intents.
+ * * @author Maria del Mar Góngora Sarabia
  */
 public class Comunidad implements Serializable {
 
-    /** Identificador único de la comunidad (UID de Firestore). */
+    /** Identificador único del documento en la colección de Firestore. */
     private String id;
 
-    /** Nombre descriptivo de la comunidad. */
+    /** Nombre descriptivo de la comunidad de vecinos. */
     private String nombre;
 
-    /** Direccion física de la comunidad. */
+    /** Ubicación física completa del inmueble gestionado. */
     private String direccion;
 
-    /** * Listado de identificadores de las votaciones asociadas a esta comunidad.
-     * Se utiliza List de String para coincidir con la estructura de arrays de Firestore.
+    /** * Colección de identificadores (UIDs) de votaciones vinculadas.
+     * Se inicializa como ArrayList para prevenir NullPointerException durante
+     * el proceso de binding de datos de Firebase.
      */
     private List<String> votaciones = new ArrayList<>();
 
-    /** * Listado de identificadores de los usuarios que pertenecen a la comunidad.
-     */
+    /** Colección de identificadores (UIDs) de los usuarios (propietarios) asociados. */
     private List<String> usuarios = new ArrayList<>();
 
     /**
-     * Constructor vacío requerido por Firebase Firestore para la
-     * deserialización automática de documentos.
+     * Constructor público sin argumentos.
+     * * Requisito mandatorio para que el SDK de Firebase pueda instanciar la clase
+     * mediante reflexión al realizar operaciones de mapeo de documentos (toObject).
      */
     public Comunidad() {
     }
 
-    // --- MÉTODOS GETTERS Y SETTERS ---
+    // --- MÉTODOS DE ACCESO (ENCAPSULAMIENTO) ---
 
-    /** @return El identificador único de la comunidad. */
     public String getId() { return id; }
-    /** @param id El nuevo identificador para la comunidad. */
     public void setId(String id) { this.id = id; }
 
-    /** @return El nombre de la comunidad. */
     public String getNombre() { return nombre; }
-    /** @param nombre El nuevo nombre para la comunidad. */
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    /** @return La dirección de la comunidad. */
     public String getDireccion() { return direccion; }
-    /** @param direccion La nueva dirección de la comunidad. */
     public void setDireccion(String direccion) { this.direccion = direccion; }
 
-    /** @return La lista de IDs de votaciones. */
+    /**
+     * Obtiene el listado de referencias a votaciones.
+     * @return List de Strings con los IDs de los documentos de votación.
+     */
     public List<String> getVotaciones() { return votaciones; }
-    /** @param votaciones El nuevo listado de ID de votaciones. */
     public void setVotaciones(List<String> votaciones) { this.votaciones = votaciones; }
 
-    /** @return La lista de IDs de usuarios. */
     public List<String> getUsuarios() { return usuarios; }
-    /** @param usuarios El nuevo listado de ID de usuarios. */
     public void setUsuarios(List<String> usuarios) { this.usuarios = usuarios; }
 }
